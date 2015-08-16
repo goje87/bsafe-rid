@@ -1,5 +1,5 @@
 {
-	"name" : "omnisense",
+	"name" : "bsafe",
 	"start": "node Server.js",
 	"version" : "1.0.0",
 	"scripts" : "",
