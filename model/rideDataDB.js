@@ -21,6 +21,7 @@ var rideDataDBSchema = new mongoose.Schema({
                     "headingAccuracy": Number,
                   },
                   "rideID"   : Number,
+                  "tagID"   : Number,
                   "version"  : Number
 });
 mongoose.model("rideDataDB", rideDataDBSchema);

@@ -12,6 +12,12 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
 app.engine("html", require("ejs").renderFile);
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 //app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json({ extended: true }));
 
@@ -45,30 +51,32 @@ app.get("/:rideID?", function(req, res){
 
 
 
-app.post("/", function(req, resp){
+
+app.post("/:rideID?", function(req, resp){
 				// Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
 				var acc = {
-					"x" : req.body.acc.x,
-					"y" : req.body.acc.y,
-					"z" : req.body.acc.z,
-					"timestamp" : req.body.acc.timestamp
+					"x" : req.query.accX,
+					"y" : req.query.accY,
+					"z" : req.query.accZ,
+					"timestamp" : req.query.timestamp
 				};
 				var geo = {
-					"latitude"        : req.body.geo.latitude,
-					"longitude"       : req.body.geo.longitude,
-					"accuracy"        : req.body.geo.accuracy,
-					"altitude"        : req.body.geo.altitude,
-					"altitudeAccuracy": req.body.geo.altitudeAccuracy,
-					"heading"         : req.body.geo.heading,
-					"speed"           : req.body.geo.speed
+					"latitude"        : req.query.geoLatitude,
+					"longitude"       : req.query.geoLongitude,
+					"accuracy"        : req.query.geoAccuracy,
+					"altitude"        : req.query.geoAltitude,
+					"altitudeAccuracy": req.query.geoAltitudeAccuracy,
+					"heading"         : req.query.geoHeading,
+					"speed"           : req.query.geoSpeed
 				};
 				var comp = {
-					"magneticHeading": req.body.comp.magneticHeading,
-					"trueHeading"    : req.body.comp.trueHeading,
-					"headingAccuracy": req.body.comp.headingAccuracy,
+					"magneticHeading": req.query.compMagneticHeading,
+					"trueHeading"    : req.query.compTrueHeading,
+					"headingAccuracy": req.query.compHeadingAccuracy,
 				};
-				var rideID    = req.body.rideID;
-				var version   = req.body.ver;
+				var rideID    = req.query.rideID;
+        var tagID     = req.query.tagID;
+				var version   = req.query.ver;
 
 				mongoose.model('rideDataDB').create({
 				                  "acc" : {
@@ -92,6 +100,7 @@ app.post("/", function(req, resp){
 				                    "headingAccuracy" : comp.headingAccuracy,
 				                  },
 				                  "rideID"   : rideID,
+                          "tagID"    : tagID,
 				                  "version"  : version
 				}, function (err, rideDataDB) {
 							if (err) {
