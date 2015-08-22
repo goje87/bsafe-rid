@@ -4,7 +4,7 @@ var rideDataDBSchema = new mongoose.Schema({
                     "x" : Number,
                     "y" : Number,
                     "z" : Number,
-                    "timestamp" : Date
+                    "timestamp" : Number
                   },
                   "geo" : {
                     "latitude"        : Number,
@@ -21,7 +21,7 @@ var rideDataDBSchema = new mongoose.Schema({
                     "headingAccuracy": Number,
                   },
                   "rideID"   : Number,
-                  "tagID"   : Number,
+                  "tagID"    : Number,
                   "version"  : Number
 });
 mongoose.model("rideDataDB", rideDataDBSchema);
