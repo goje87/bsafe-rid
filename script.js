@@ -1,5 +1,5 @@
 var MongoClient = require('mongodb').MongoClient;
-var collectionName = "rides";
+var collectionName = "sensorData";
 MongoClient.connect('mongodb://localhost:27017/bsafe_rid', function(err, db) {
     if(err){
       console.log("FAILED to connect to DB");

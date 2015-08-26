@@ -1,5 +1,5 @@
 var mongoose = require("mongoose");
-var bsafe_ridSchema = new mongoose.Schema({
+var sensorDataSchema = new mongoose.Schema({
                   "acc": {
                     "x" : Number,
                     "y" : Number,
@@ -24,4 +24,4 @@ var bsafe_ridSchema = new mongoose.Schema({
                   "tagId"    : Number,
                   "version"  : Number
 });
-mongoose.model("bsafe_rid", bsafe_ridSchema);
+mongoose.model("sensorData", sensorDataSchema);

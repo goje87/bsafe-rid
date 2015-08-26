@@ -3,7 +3,7 @@ var router         = express.Router();
 var http           = require('http');
 var app            = express();
 var db             = require("./model/db");
-var bsafe_rid     = require("./model/bsafe_rid");
+var sensorData     = require("./model/sensorData");
 var mongoose       = require("mongoose");
 var bodyParser     = require("body-parser");
 var methodOverride = require("method-override");
@@ -34,13 +34,13 @@ app.use(methodOverride(function(req, res){
 //require("./router/crud.js")(app);
 
 app.get("/:rideId?", function(req, res){
-				mongoose.model('bsafe_rid').find({ "rideId" : req.params.rideId }, function (err, result) {
+				mongoose.model('sensorData').find({ "rideId" : req.params.rideId }, function (err, result) {
 			        if (err) {
 								  res.status(404).send;
 									console.log("ERRORED at GET /   , ");
 			            return console.error(err);
 			        } else {
-									console.log("SUCCESS at GET /   , ");
+									console.log("SUCCESS at GET /   , for collection : sensorData");
                   console.log("Get results for RIDE ID =  " + req.params.rideId );
                   res.json({ "result" : result });
                   //res.render("index.html");
@@ -78,7 +78,7 @@ app.post("/:rideID?", function(req, resp){
         var tagId     = req.query.tagId;
 				var version   = req.query.ver;
 
-				mongoose.model('bsafe_rid').create({
+				mongoose.model('sensorData').create({
 				                  "acc" : {
 				                    "x" : acc.x,
 				                    "y" : acc.y,
@@ -102,13 +102,13 @@ app.post("/:rideID?", function(req, resp){
 				                  "rideId"   : rideId,
                           "tagId"    : tagId,
 				                  "version"  : version
-				}, function (err, bsafe_rid) {
+				}, function (err, sensorData) {
 							if (err) {
 								  console.log("ERRORED at POST /   , " + err);
                   resp.send(422, { "result" : "failed" });
 							} else {
-									console.log("SUCCESS at POST /  ############################# ");
-									console.log('POST creating new entry: ' + bsafe_rid);
+									console.log("SUCCESS at POST /  for collection sensorData ############################# ");
+									console.log('POST creating new entry: ' + sensorData);
                   resp.send(201, { "result" : "success" });
 							}
 				});
