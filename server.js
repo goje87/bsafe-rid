@@ -1,9 +1,9 @@
-var express    = require("express");
+var express        = require("express");
 var router         = express.Router();
-var http       = require('http');
-var app        = express();
-var db         = require("./model/db");
-var rideDataDB = require("./model/rideDataDB");
+var http           = require('http');
+var app            = express();
+var db             = require("./model/db");
+var bsafe_rid     = require("./model/bsafe_rid");
 var mongoose       = require("mongoose");
 var bodyParser     = require("body-parser");
 var methodOverride = require("method-override");
@@ -33,15 +33,15 @@ app.use(methodOverride(function(req, res){
 
 //require("./router/crud.js")(app);
 
-app.get("/:rideID?", function(req, res){
-				mongoose.model('rideDataDB').find({ "rideID" : req.params.rideID }, function (err, result) {
+app.get("/:rideId?", function(req, res){
+				mongoose.model('bsafe_rid').find({ "rideId" : req.params.rideId }, function (err, result) {
 			        if (err) {
 								  res.status(404).send;
 									console.log("ERRORED at GET /   , ");
 			            return console.error(err);
 			        } else {
 									console.log("SUCCESS at GET /   , ");
-                  console.log("Get results for RIDE ID =  " + req.params.rideID );
+                  console.log("Get results for RIDE ID =  " + req.params.rideId );
                   res.json({ "result" : result });
                   //res.render("index.html");
 			        }
@@ -74,11 +74,11 @@ app.post("/:rideID?", function(req, resp){
 					"trueHeading"    : req.query.compTrueHeading,
 					"headingAccuracy": req.query.compHeadingAccuracy,
 				};
-				var rideID    = req.query.rideID;
-        var tagID     = req.query.tagID;
+				var rideId    = req.query.rideId;
+        var tagId     = req.query.tagId;
 				var version   = req.query.ver;
 
-				mongoose.model('rideDataDB').create({
+				mongoose.model('bsafe_rid').create({
 				                  "acc" : {
 				                    "x" : acc.x,
 				                    "y" : acc.y,
@@ -99,16 +99,16 @@ app.post("/:rideID?", function(req, resp){
 				                    "trueHeading"     : comp.trueHeading,
 				                    "headingAccuracy" : comp.headingAccuracy,
 				                  },
-				                  "rideID"   : rideID,
-                          "tagID"    : tagID,
+				                  "rideId"   : rideId,
+                          "tagId"    : tagId,
 				                  "version"  : version
-				}, function (err, rideDataDB) {
+				}, function (err, bsafe_rid) {
 							if (err) {
 								  console.log("ERRORED at POST /   , " + err);
                   resp.send(422, { "result" : "failed" });
 							} else {
 									console.log("SUCCESS at POST /  ############################# ");
-									console.log('POST creating new entry: ' + rideDataDB);
+									console.log('POST creating new entry: ' + bsafe_rid);
                   resp.send(201, { "result" : "success" });
 							}
 				});

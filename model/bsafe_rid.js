@@ -1,5 +1,5 @@
 var mongoose = require("mongoose");
-var rideDataDBSchema = new mongoose.Schema({
+var bsafe_ridSchema = new mongoose.Schema({
                   "acc": {
                     "x" : Number,
                     "y" : Number,
@@ -20,8 +20,8 @@ var rideDataDBSchema = new mongoose.Schema({
                     "trueHeading"    : Number,
                     "headingAccuracy": Number,
                   },
-                  "rideID"   : Number,
-                  "tagID"    : Number,
+                  "rideId"   : Number,
+                  "tagId"    : Number,
                   "version"  : Number
 });
-mongoose.model("rideDataDB", rideDataDBSchema);
+mongoose.model("bsafe_rid", bsafe_ridSchema);

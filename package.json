@@ -1,8 +1,10 @@
 {
 	"name" : "bsafe",
-	"start": "node Server.js",
+	"scripts": {
+		"dbinit" : "node script.js"
+		},
+	"start"  : "node server.js",
 	"version" : "1.0.0",
-	"scripts" : "",
 	"dependencies" : {
 										"express" : "~4.0.0",
 										"mysql" : "~2.8.0",
@@ -10,6 +12,7 @@
 										"body-parser": "~1.12.0",
 										"express-session" : "~1.11.3",
 										"mongoose" : "~4.1.2",
-										"method-override " : "*"
+										"method-override " : "*",
+										"mongodb" : "~2.0.42"
 					 	       }
 }
