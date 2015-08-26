@@ -4,7 +4,6 @@ var sensorDataSchema = new mongoose.Schema({
                     "x" : Number,
                     "y" : Number,
                     "z" : Number,
-                    "timestamp" : Number
                   },
                   "geo" : {
                     "latitude"        : Number,
@@ -20,8 +19,9 @@ var sensorDataSchema = new mongoose.Schema({
                     "trueHeading"    : Number,
                     "headingAccuracy": Number,
                   },
-                  "rideId"   : Number,
-                  "tagId"    : Number,
-                  "version"  : Number
+                  "timestamp" : Number,
+                  "rideId"    : Number,
+                  "tagId"     : Number,
+                  "version"   : Number
 });
 mongoose.model("sensorData", sensorDataSchema);

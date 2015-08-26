@@ -58,7 +58,6 @@ app.post("/:rideID?", function(req, resp){
 					"x" : req.query.accX,
 					"y" : req.query.accY,
 					"z" : req.query.accZ,
-					"timestamp" : req.query.timestamp
 				};
 				var geo = {
 					"latitude"        : req.query.geoLatitude,
@@ -74,6 +73,7 @@ app.post("/:rideID?", function(req, resp){
 					"trueHeading"    : req.query.compTrueHeading,
 					"headingAccuracy": req.query.compHeadingAccuracy,
 				};
+        var timestamp = req.query.timestamp;
 				var rideId    = req.query.rideId;
         var tagId     = req.query.tagId;
 				var version   = req.query.ver;
@@ -83,7 +83,6 @@ app.post("/:rideID?", function(req, resp){
 				                    "x" : acc.x,
 				                    "y" : acc.y,
 				                    "z" : acc.z,
-				                    "timestamp" : acc.timestamp
 				                  },
 				                  "geo" : {
 				                    "latitude"        : geo.latitude,
@@ -99,6 +98,7 @@ app.post("/:rideID?", function(req, resp){
 				                    "trueHeading"     : comp.trueHeading,
 				                    "headingAccuracy" : comp.headingAccuracy,
 				                  },
+                          "timestamp" : timestamp,
 				                  "rideId"   : rideId,
                           "tagId"    : tagId,
 				                  "version"  : version
