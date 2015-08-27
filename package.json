@@ -1,9 +1,9 @@
 {
   "name": "bsafe",
   "scripts": {
-    "dbinit": "node script.js"
+    "setup": "npm install; npm update; node scripts/setup.js",
+    "start": "forever scripts/server.js"
   },
-  "start": "node server.js",
   "version": "1.0.0",
   "dependencies": {
     "body-parser": "~1.12.0",
