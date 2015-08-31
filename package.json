@@ -11,7 +11,7 @@
     "express": "~4.0.0",
     "express-session": "~1.11.3",
     "forever": "^0.15.1",
-    "method-override ": "*",
+    "method-override": "^2.3.5",
     "mongodb": "~2.0.42",
     "mongoose": "~4.1.2",
     "mysql": "~2.8.0"
