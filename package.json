@@ -2,7 +2,7 @@
   "name": "bsafe",
   "scripts": {
     "setup": "npm install; npm update; node scripts/setup.js",
-    "start": "forever scripts/server.js"
+    "start": "forever app.js"
   },
   "version": "1.0.0",
   "dependencies": {
