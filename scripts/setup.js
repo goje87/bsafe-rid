@@ -1,5 +1,7 @@
 var MongoClient = require('mongodb').MongoClient;
-var collectionName = "sensorData";
+var collectionName = ["sensorData", "rideInfo"]; // Add new collections to this array
+
+collectionName.forEach(function (collectionName){
 MongoClient.connect('mongodb://localhost:27017/bsafe_rid', function(err, db) {
   if(err){
     console.log("FAILED to connect to DB");
@@ -14,7 +16,7 @@ MongoClient.connect('mongodb://localhost:27017/bsafe_rid', function(err, db) {
           if(err != null){
           console.log(err);
           }
-          console.log("Done creating collection.");
+          console.log("Done creating collection." + collectionName);
           // Retry to get the collection.
           db.collection(collectionName, {strict:true}, function(err, col3) {
           if(err){
@@ -29,3 +31,4 @@ MongoClient.connect('mongodb://localhost:27017/bsafe_rid', function(err, db) {
     }
   });
 });
+})
