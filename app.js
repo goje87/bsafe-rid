@@ -70,7 +70,7 @@ app.get("/rideInfo/:rideId", function(req, res){
 
 
 
-app.post("/sensorData/:rideId", function(req, resp){
+app.post("/sensorData/", function(req, resp){
 				// Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
 				var acc = {
 					"x" : req.query.accX,
@@ -134,7 +134,7 @@ app.post("/sensorData/:rideId", function(req, resp){
 
 
 
-app.post("/rideInfo/:rideId", function(req, resp){
+app.post("/rideInfo", function(req, resp){
 
 				mongoose.model('rideInfo').create({
           "rideId"            : req.query.rideId,
@@ -150,11 +150,11 @@ app.post("/rideInfo/:rideId", function(req, resp){
 				}, function (err, rideInfo) {
 							if (err) {
 								  console.log("ERRORED at POST /   , " + err);
-                  resp.send(422, { "result" : "failed" });
+                  resp.send(422, { "result" : "failed", "message" : err });
 							} else {
 									console.log("SUCCESS at POST /  for collection rideInfo ############################# ");
 									console.log('POST creating new entry: ' + rideInfo);
-                  resp.send(201, { "result" : "success" });
+                  resp.send(201, { "result" : "success", "data" : rideInfo});
 							}
 				});
 })
