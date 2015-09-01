@@ -34,7 +34,7 @@ app.use(methodOverride(function(req, res){
 
 //require("./router/crud.js")(app);
 
-app.get("/sensorData/:rideId?/:tagId?", function(req, res){
+app.get("/sensorData/:rideId/:tagId?", function(req, res){
 				mongoose.model('sensorData').find({ "rideId" : req.params.rideId, "tagId" : req.params.tagId }, function (err, result) {
 			        if (err) {
 								  res.status(404).send;
@@ -51,7 +51,7 @@ app.get("/sensorData/:rideId?/:tagId?", function(req, res){
 });
 
 
-app.get("/rideInfo/:rideId?", function(req, res){
+app.get("/rideInfo/:rideId", function(req, res){
 				mongoose.model('sensorData').find({ "rideId" : req.params.rideId }, function (err, result) {
 			        if (err) {
 								  res.status(404).send;
@@ -70,7 +70,7 @@ app.get("/rideInfo/:rideId?", function(req, res){
 
 
 
-app.post("/sensorData/:rideId?", function(req, resp){
+app.post("/sensorData/:rideId", function(req, resp){
 				// Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
 				var acc = {
 					"x" : req.query.accX,
@@ -134,7 +134,7 @@ app.post("/sensorData/:rideId?", function(req, resp){
 
 
 
-app.post("/rideInfo/:rideId?", function(req, resp){
+app.post("/rideInfo/:rideId", function(req, resp){
 
 				mongoose.model('rideInfo').create({
           "rideId"            : req.query.rideId,
