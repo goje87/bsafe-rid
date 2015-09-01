@@ -136,9 +136,17 @@ app.post("/sensorData/", function(req, resp){
 
 app.post("/rideInfo", function(req, resp){
 
+        var rideStatus;
+
+        if(req.query.status){
+          rideStatus = "inprogress";
+        } else {
+          rideStatus = req.query.status;
+        }
+
 				mongoose.model('rideInfo').create({
           "rideId"            : req.query.rideId,
-          "status"            : "inprogress",
+          "status"            : rideStatus,
           "startedAt"         : req.query.startedAt,
           "endedAt"           : req.query.endedAt,
           "analysisInfo"      : {
