@@ -4,6 +4,7 @@ var http           = require('http');
 var app            = express();
 var db             = require("./model/db");
 var sensorData     = require("./model/sensorData");
+var rideInfo     = require("./model/rideInfo");
 var mongoose       = require("mongoose");
 var bodyParser     = require("body-parser");
 var methodOverride = require("method-override");
@@ -33,8 +34,8 @@ app.use(methodOverride(function(req, res){
 
 //require("./router/crud.js")(app);
 
-app.get("/:rideId?", function(req, res){
-				mongoose.model('sensorData').find({ "rideId" : req.params.rideId }, function (err, result) {
+app.get("/sensorData/:rideId/:tagId?", function(req, res){
+				mongoose.model('sensorData').find({ "rideId" : req.params.rideId, "tagId" : req.params.tagId }, function (err, result) {
 			        if (err) {
 								  res.status(404).send;
 									console.log("ERRORED at GET /   , ");
@@ -50,9 +51,26 @@ app.get("/:rideId?", function(req, res){
 });
 
 
+app.get("/rideInfo/:rideId", function(req, res){
+				mongoose.model('sensorData').find({ "rideId" : req.params.rideId }, function (err, result) {
+			        if (err) {
+								  res.status(404).send;
+									console.log("ERRORED at GET /   , ");
+			            return console.error(err);
+			        } else {
+									console.log("SUCCESS at GET /   , for collection : rideInfo");
+                  console.log("Get results for RIDE ID =  " + req.params.rideId );
+                  res.json({ "result" : result });
+                  //res.render("index.html");
+			        }
+			  });
+
+});
 
 
-app.post("/:rideID?", function(req, resp){
+
+
+app.post("/sensorData/", function(req, resp){
 				// Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
 				var acc = {
 					"x" : req.query.accX,
@@ -113,6 +131,42 @@ app.post("/:rideID?", function(req, resp){
 							}
 				});
 })
+
+
+
+app.post("/rideInfo", function(req, resp){
+
+        var rideStatus;
+
+        if(req.query.status){
+          rideStatus = "inprogress";
+        } else {
+          rideStatus = req.query.status;
+        }
+
+				mongoose.model('rideInfo').create({
+          "rideId"            : req.query.rideId,
+          "status"            : rideStatus,
+          "startedAt"         : req.query.startedAt,
+          "endedAt"           : req.query.endedAt,
+          "analysisInfo"      : {
+            "status"          : req.query.analysisStatus,
+            "version"         : req.query.analysisVersion,
+            "startedAt"       : req.query.analysisStartedAt,
+            "endedAt"         : req.query.analysisEndedAt
+          }
+				}, function (err, rideInfo) {
+							if (err) {
+								  console.log("ERRORED at POST /   , " + err);
+                  resp.send(422, { "result" : "failed", "message" : err });
+							} else {
+									console.log("SUCCESS at POST /  for collection rideInfo ############################# ");
+									console.log('POST creating new entry: ' + rideInfo);
+                  resp.send(201, { "result" : "success", "data" : rideInfo});
+							}
+				});
+})
+
 
 var server = app.listen(3000, function(){
 	console.log("Running on port 3000");
