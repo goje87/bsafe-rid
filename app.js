@@ -70,7 +70,7 @@ app.get("/rideInfo/:rideId", function(req, res){
 
 
 
-app.post("/sensorData/", function(req, resp){
+app.post("/sensorData", function(req, resp){
 				// Get values from POST request. These can be done through forms or REST calls. These rely on the "name" attributes for forms
 				var acc = {
 					"x" : req.query.accX,
