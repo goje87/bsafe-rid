@@ -193,17 +193,12 @@ app.post("/rideInfo", function(req, resp){
 app.put("/rideInfo", function(req, resp){
 
     if(req.query.rideId){
-        var rideStatus;
+      var updateFields = {};
+      for(var i in req.query){
+        updateFields[i] = req.query[i];
+      }
 
-        if(req.query.status){
-          rideStatus = req.query.status;
-        };
-
-        if(req.query.analysisStatus){
-          analysisStatus = req.query.analysisStatus;
-        };
-
-				mongoose.model('rideInfo').findOneAndUpdate({ rideId : req.query.rideId}, { status : req.query.status }, function (err, rideInfo) {
+				mongoose.model('rideInfo').findOneAndUpdate({ rideId : req.query.rideId}, updateFields, function (err, rideInfo) {
 							if (err) {
 								  console.log("ERRORED at PUT /   , " + err);
                   resp.send(422, { "success" : false, error : { "message" : err }});
