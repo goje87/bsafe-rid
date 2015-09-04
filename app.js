@@ -207,7 +207,7 @@ app.put("/rideInfo/:rideId", function(req, resp){
         updateFields[i] = req.query[i];
       }
 
-				mongoose.model('rideInfo').findOneAndUpdate({ rideId : req.params.rideId}, updateFields, function (err, rideInfo) {
+				mongoose.model('rideInfo').findOneAndUpdate({ rideId : req.params.rideId}, updateFields, { new : true}, function (err, rideInfo) {
 							if (err) {
 								  console.log("ERRORED at PUT /   , " + err);
                   resp.send(422, { "success" : false, error : { "message" : err }});
