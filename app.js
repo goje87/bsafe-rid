@@ -190,6 +190,29 @@ app.post("/rideInfo", function(req, resp){
       resp.send(422, { "success" : false, error : { "message" : "Both rideId and startedAt are REQUIRED" } });
 })
 
+app.put("/rideInfo", function(req, resp){
+
+    if(req.query.rideId){
+      var updateFields = {};
+      for(var i in req.query){
+        updateFields[i] = req.query[i];
+      }
+
+				mongoose.model('rideInfo').findOneAndUpdate({ rideId : req.query.rideId}, updateFields, function (err, rideInfo) {
+							if (err) {
+								  console.log("ERRORED at PUT /   , " + err);
+                  resp.send(422, { "success" : false, error : { "message" : err }});
+							} else {
+									console.log("SUCCESS at PUT /  for collection rideInfo ############################# ");
+									console.log('PUT updating entry: ' + rideInfo);
+                  resp.send(201, { "success" : true, "data" : rideInfo});
+							}
+				});
+        return ;
+      }
+      resp.send(422, { "success" : false, error : { "message" : "rideId is REQUIRED for PUT operation" } });
+})
+
 
 var server = app.listen(3000, function(){
 	console.log("Running on port 3000");
