@@ -37,9 +37,17 @@ app.use(methodOverride(function(req, res){
 function normalise(obj) {
 	for(var i in obj) {
 		if(obj.hasOwnProperty(i)) {
-			if(typeof obj[i] === 'undefined') {
-				obj[i] = null;
-			}
+      switch(typeof obj[i]) {
+        case 'undefined':
+          obj[i] = null;
+        break;
+        case 'string':
+          if((obj[i].toLowerCase() == "undefined") || (obj[i].toLowerCase() == "null")){
+            obj[i] = null;
+          }
+        break;
+        }
+
 		}
 	}
 	return obj;
@@ -191,7 +199,7 @@ app.post("/rideInfo", function(req, resp){
       resp.send(422, { "success" : false, error : { "message" : "Both rideId and startedAt are REQUIRED" } });
 })
 
-app.put("/rideInfo", function(req, resp){
+app.put("/rideInfo/:rideId", function(req, resp){
 
     if(req.query.rideId){
       var updateFields = {};
