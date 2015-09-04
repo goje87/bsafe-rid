@@ -201,13 +201,13 @@ app.post("/rideInfo", function(req, resp){
 
 app.put("/rideInfo/:rideId", function(req, resp){
 
-    if(req.query.rideId){
+    if(req.params.rideId){
       var updateFields = {};
       for(var i in req.query){
         updateFields[i] = req.query[i];
       }
 
-				mongoose.model('rideInfo').findOneAndUpdate({ rideId : req.query.rideId}, updateFields, function (err, rideInfo) {
+				mongoose.model('rideInfo').findOneAndUpdate({ rideId : req.params.rideId}, updateFields, function (err, rideInfo) {
 							if (err) {
 								  console.log("ERRORED at PUT /   , " + err);
                   resp.send(422, { "success" : false, error : { "message" : err }});
