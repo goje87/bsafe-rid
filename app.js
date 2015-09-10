@@ -47,7 +47,6 @@ function normalise(obj) {
           }
         break;
         }
-
 		}
 	}
 	return obj;
@@ -64,6 +63,7 @@ app.get("/sensorData/:rideId/:tagId?", function(req, res){
 									console.log("SUCCESS at GET /   , for collection : sensorData");
                   console.log("Get results for RIDE ID =  " + req.params.rideId );
                   res.send(200, { "success" : true, "data" : result });
+                  result = null;
                   //res.json({ "success" : true, "data" : result });
                   //res.render("index.html");
 			        }
@@ -83,6 +83,7 @@ app.get("/rideInfo/:rideId", function(req, res){
 									console.log("SUCCESS at GET /   , for collection : rideInfo");
                   console.log("Get results for RIDE ID =  " + req.params.rideId );
                   res.send(200, { "success" : true, "data" : result });
+                  result = null;
                   //res.json({ "success" : true, "data" : result });
                   //res.render("index.html");
 			        }
@@ -151,6 +152,7 @@ app.post("/sensorData", function(req, resp){
 									console.log("SUCCESS at POST /  for collection sensorData ############################# ");
 									console.log('POST creating new entry: ' + sensorData);
                   resp.send(201, { "success" : true, "data" : sensorData });
+                  sensorData = null;
 							}
 				});
 })
@@ -192,6 +194,7 @@ app.post("/rideInfo", function(req, resp){
 									console.log("SUCCESS at POST /  for collection rideInfo ############################# ");
 									console.log('POST creating new entry: ' + rideInfo);
                   resp.send(201, { "success" : true, "data" : rideInfo});
+                  rideInfo = null;
 							}
 				});
         return ;
@@ -215,6 +218,7 @@ app.put("/rideInfo/:rideId", function(req, resp){
 									console.log("SUCCESS at PUT /  for collection rideInfo ############################# ");
 									console.log('PUT updating entry: ' + rideInfo);
                   resp.send(201, { "success" : true, "data" : rideInfo});
+                  rideInfo = null;
 							}
 				});
         return ;
