@@ -58,20 +58,38 @@ function normalise(obj) {
   return obj;
 }
 
-app.get('/sensorData/:rideId/:tagId?', function(req, res){
-  mongoose.model('sensorData').find({ 'rideId': req.params.rideId, 'tagId': req.params.tagId }, function (err, result) {
-    if (err) {
-      res.send(404, { 'success': false, error: { 'message': err } });
-      console.log('ERRORED at GET /   , ');
-      return console.error(err);
-    }
-    else {
-      console.log('SUCCESS at GET /   , for collection: sensorData');
-      console.log('Get results for RIDE ID =  ' + req.params.rideId );
-      res.send(200, { 'success': true, 'data': result });
-      result = null;
-    }
+app.get('/sensorData/:rideId/:tagId?', function(req, res, next){
+  var stream = mongoose.model('sensorData').find({ 'rideId': req.params.rideId, 'tagId': req.params.tagId }).stream();
+
+  var isFirstDoc = true;
+
+  res.write(' { "success": true, "data": [');
+  stream.on('data', function (doc) {
+    res.write((isFirstDoc ? '' : ',')+JSON.stringify(doc));
+    isFirstDoc = false;
   });
+  stream.on('error', function (err) {
+      return next(err);
+  });
+  stream.on('close', function () {
+    res.write(']}');
+    res.end();
+  });
+
+  // mongoose.model('sensorData').find({ 'rideId': req.params.rideId, 'tagId': req.params.tagId }, function (err, result) {
+  //   if (err) {
+  //     res.send(404, { 'success': false, error: { 'message': err } });
+  //     console.log('ERRORED at GET /   , ');
+  //     return console.error(err);
+  //   }
+  //   else {
+  //     console.log('SUCCESS at GET /   , for collection: sensorData');
+  //     console.log('Get results for RIDE ID =  ' + req.params.rideId );
+  //     res.send(200, { 'success': true, 'data': result });
+  //     result = null;
+  //   }
+  // });
+
 });
 
 
