@@ -59,7 +59,11 @@ function normalise(obj) {
 }
 
 app.get('/sensorData/:rideId/:tagId?', function(req, res, next){
-  var stream = mongoose.model('sensorData').find({ 'rideId': req.params.rideId, 'tagId': req.params.tagId }).stream();
+  if(req.params.tagId){
+    var stream = mongoose.model('sensorData').find({ 'rideId': req.params.rideId, 'tagId': req.params.tagId }).stream();
+  } else {
+    var stream = mongoose.model('sensorData').find({ 'rideId': req.params.rideId }).stream();
+  }
 
   var isFirstDoc = true;
 
