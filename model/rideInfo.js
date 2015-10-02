@@ -1,6 +1,7 @@
 
 module.exports.schema = {
   'rideId': Number,
+  'userId': String,
   'status': { type: String, enum: ['inprogress', 'completed'] },
   'startedAt': Number,
   'endedAt': Number,
