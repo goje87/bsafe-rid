@@ -114,6 +114,25 @@ app.get('/rideInfo/:rideId', function(req, res){
 });
 
 
+app.get('/rideInfo', function(req, res, next){
+  // To GET all rides by "userId"
+  if(req.query.userId){
+    var stream = mongoose.model('rideInfo').find({ 'userId': req.query.userId }).stream();
+    var isFirstDoc = true;
+    res.write(' { "success": true, "data": [');
+    stream.on('data', function (doc) {
+      res.write((isFirstDoc ? '' : ',')+JSON.stringify(doc));
+      isFirstDoc = false;
+    });
+    stream.on('error', function (err) {
+        return next(err);
+    });
+    stream.on('close', function () {
+      res.write(']}');
+      res.end();
+    });
+  };
+});
 
 
 app.post('/sensorData', function(req, resp){
@@ -184,7 +203,7 @@ app.post('/sensorData', function(req, resp){
 
 app.post('/rideInfo', function(req, resp){
 
-  if(req.query.rideId && req.query.startedAt){
+  if(req.query.rideId && req.query.userId && req.query.startedAt){
     var rideStatus, analysisStatus;
 
     if(req.query.status){
@@ -203,6 +222,7 @@ app.post('/rideInfo', function(req, resp){
 
     mongoose.model('rideInfo').create({
       'rideId': req.query.rideId,
+      'userId': req.query.userId,
       'status': rideStatus,
       'startedAt': req.query.startedAt,
       'endedAt': req.query.endedAt,
