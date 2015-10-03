@@ -9,6 +9,20 @@ module.exports.schema = {
     'status': { type: String, enum: ['inprogress', 'completed', 'pending'] },
     'version': Number,
     'startedAt': Number,
-    'endedAt': Number
+    'endedAt': Number,
+    'violations': [{
+      'violationType': String,
+      'geo': {
+        'latitude': Number,
+        'longitude': Number,
+        'accuracy': Number,
+        'altitude': Number,
+        'altitudeAccuracy': Number,
+        'heading': Number,
+        'speed': Number,
+      },
+      'severity': Number,
+      'description': String
+    }]
   }
 };
