@@ -252,16 +252,19 @@ app.post('/rideInfo', function(req, resp){
 app.put('/rideInfo/:rideId', function(req, resp){
   if(req.params.rideId) {
     var updateFields = {};
-    for(var i in req.query){
-      updateFields[i] = req.query[i];
-    }
+    for(var i in req.body){
+      if(i==='analysisInfo'){
+        updateFields[i] = JSON.parse(req.body[i]);
+      }else{
+        updateFields[i] = req.body[i];
+      }
+    };
 
     mongoose.model('rideInfo').findOneAndUpdate({ rideId: req.params.rideId}, updateFields, { new: true}, function (err, rideInfo) {
       if (err) {
         console.log('ERRORED at PUT /   , ' + err);
         resp.send(422, { 'success': false, error: { 'message': err }});
-      }
-      else {
+      } else {
         console.log('SUCCESS at PUT /  for collection rideInfo ############################# ');
         console.log('PUT updating entry: ' + rideInfo);
         resp.send(201, { 'success': true, 'data': rideInfo});
