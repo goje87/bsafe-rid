@@ -1,11 +1,7 @@
 'use strict';
 var http = require('http');
-var express = require('express');
-var app = express();
 var mongoose = require('mongoose');
 var request = require('request');
-var bodyParser = require('body-parser');
-var methodOverride = require('method-override');
 var Qs = require('qs');
 var fs = require('fs');
 
@@ -15,27 +11,6 @@ var fs = require('fs');
 //   analysisData: require('./model/analysisData').schema,
 // };
 
-app.set('views', __dirname + '/views');
-app.set('view engine', 'ejs');
-app.engine('html', require('ejs').renderFile);
-
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  next();
-});
-
-app.use(bodyParser.json({ extended: true }));
-
-app.use(methodOverride(function(req){
-  if (req.body && typeof req.body === 'object' && '_method' in req.body) {
-    // look in urlencoded POST bodies and delete it
-    var method = req.body._method;
-    delete req.body._method;
-    return method;
-  }
-}));
 
 function analyzeFrame(rideId, frame){
   console.log("IN ANALYSIS FUNCTION");
@@ -137,7 +112,3 @@ function analyzeRide(rideId){
 };
 
 analyzeRide(53080);
-
-app.listen(4000, function(){
-  console.log('Running on port 3000');
-});
