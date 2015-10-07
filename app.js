@@ -132,6 +132,23 @@ app.get('/rideInfo', function(req, res, next){
       res.end();
     });
   };
+  if(req.body.analyzed === 'false'){
+    var stream = mongoose.model('rideInfo').find({ 'endedAt': { $exists: true },'status': 'completed', 'analysisInfo.status': 'pending' }).stream();
+    var isFirstDoc = true;
+    res.write(' { "success": true, "data": [');
+    stream.on('data', function (doc) {
+      console.log(doc)
+      res.write((isFirstDoc ? '' : ',')+JSON.stringify(doc));
+      isFirstDoc = false;
+    });
+    stream.on('error', function (err) {
+        return next(err);
+    });
+    stream.on('close', function () {
+      res.write(']}');
+      res.end();
+    });
+  }
 });
 
 
@@ -280,3 +297,8 @@ app.put('/rideInfo/:rideId', function(req, resp){
 app.listen(3000, function(){
   console.log('Running on port 3000');
 });
+
+var analysis = require('./analysis/analysis');
+setInterval(function() {
+  analysis.analyzeRide();
+}, 10000);
