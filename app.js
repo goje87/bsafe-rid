@@ -222,6 +222,7 @@ app.post('/rideInfo', function(req, resp){
 
     mongoose.model('rideInfo').create({
       'rideId': req.query.rideId,
+      'title': req.query.title,
       'userId': req.query.userId,
       'status': rideStatus,
       'startedAt': req.query.startedAt,
@@ -246,7 +247,7 @@ app.post('/rideInfo', function(req, resp){
     });
     return ;
   }
-  resp.send(422, { 'success': false, error: { 'message': 'Both rideId and startedAt are REQUIRED' } });
+  resp.send(422, { 'success': false, error: { 'message': 'Both rideId, userId and startedAt are REQUIRED' } });
 });
 
 app.put('/rideInfo/:rideId', function(req, resp){
