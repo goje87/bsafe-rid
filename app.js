@@ -116,8 +116,8 @@ app.get('/rideInfo/:rideId', function(req, res){
 
 app.get('/rideInfo', function(req, res, next){
   // To GET all rides by "userId"
-  if(req.body.userId){
-    var stream = mongoose.model('rideInfo').find({ 'userId': req.body.userId }).stream();
+  if(req.query.userId){
+    var stream = mongoose.model('rideInfo').find({ 'userId': req.query.userId }).stream();
     var isFirstDoc = true;
     res.write(' { "success": true, "data": [');
     stream.on('data', function (doc) {
