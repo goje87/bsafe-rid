@@ -103,13 +103,13 @@ app.get('/rideInfo/:rideId', function(req, res){
       res.send(404, { 'success': false, error: { 'message': err } });
       console.log('ERRORED at GET /   , ');
       return console.error(err);
-    };
+    }
     else {
       console.log('SUCCESS at GET /   , for collection: rideInfo');
       console.log('Get results for RIDE ID =  ' + req.params.rideId );
       res.send(200, { 'success': true, 'data': result });
       result = null;
-    };
+    }
   });
 });
 
