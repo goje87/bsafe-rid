@@ -116,8 +116,8 @@ app.get('/rideInfo/:rideId', function(req, res){
 
 app.get('/rideInfo', function(req, res, next){
   // To GET all rides by "userId"
-  if(req.query.userId){
-    var stream = mongoose.model('rideInfo').find({ 'userId': req.query.userId }).stream();
+  if(req.body.userId){
+    var stream = mongoose.model('rideInfo').find({ 'userId': req.body.userId }).stream();
     var isFirstDoc = true;
     res.write(' { "success": true, "data": [');
     stream.on('data', function (doc) {
@@ -138,28 +138,28 @@ app.get('/rideInfo', function(req, res, next){
 app.post('/sensorData', function(req, resp){
   // Get values from POST request. These can be done through forms or REST calls. These rely on the 'name' attributes for forms
   var acc = normalise({
-    'x': req.query.accX,
-    'y': req.query.accY,
-    'z': req.query.accZ
+    'x': req.body.accX,
+    'y': req.body.accY,
+    'z': req.body.accZ
   });
   var geo = normalise({
-    'latitude': req.query.geoLatitude,
-    'longitude': req.query.geoLongitude,
-    'accuracy': req.query.geoAccuracy,
-    'altitude': req.query.geoAltitude,
-    'altitudeAccuracy': req.query.geoAltitudeAccuracy,
-    'heading': req.query.geoHeading,
-    'speed': req.query.geoSpeed
+    'latitude': req.body.geoLatitude,
+    'longitude': req.body.geoLongitude,
+    'accuracy': req.body.geoAccuracy,
+    'altitude': req.body.geoAltitude,
+    'altitudeAccuracy': req.body.geoAltitudeAccuracy,
+    'heading': req.body.geoHeading,
+    'speed': req.body.geoSpeed
   });
   var comp = normalise({
-    'magneticHeading': req.query.compMagneticHeading,
-    'trueHeading': req.query.compTrueHeading,
-    'headingAccuracy': req.query.compHeadingAccuracy
+    'magneticHeading': req.body.compMagneticHeading,
+    'trueHeading': req.body.compTrueHeading,
+    'headingAccuracy': req.body.compHeadingAccuracy
   });
-  var timestamp = req.query.timestamp;
-  var rideId    = req.query.rideId;
-  var tagId     = req.query.tagId;
-  var version   = req.query.ver;
+  var timestamp = req.body.timestamp;
+  var rideId    = req.body.rideId;
+  var tagId     = req.body.tagId;
+  var version   = req.body.ver;
 
   mongoose.model('sensorData').create({
     'acc': {
@@ -203,35 +203,35 @@ app.post('/sensorData', function(req, resp){
 
 app.post('/rideInfo', function(req, resp){
 
-  if(req.query.rideId && req.query.userId && req.query.startedAt){
+  if(req.body.rideId && req.body.userId && req.body.startedAt){
     var rideStatus, analysisStatus;
 
-    if(req.query.status){
-      rideStatus = req.query.status;
+    if(req.body.status){
+      rideStatus = req.body.status;
     }
     else {
       rideStatus = 'inprogress';
     }
 
-    if(req.query.analysisStatus){
-      analysisStatus = req.query.analysisStatus;
+    if(req.body.analysisStatus){
+      analysisStatus = req.body.analysisStatus;
     }
     else {
       analysisStatus = 'pending';
     }
 
     mongoose.model('rideInfo').create({
-      'rideId': req.query.rideId,
-      'title': req.query.title,
-      'userId': req.query.userId,
+      'rideId': req.body.rideId,
+      'title': req.body.title,
+      'userId': req.body.userId,
       'status': rideStatus,
-      'startedAt': req.query.startedAt,
-      'endedAt': req.query.endedAt,
+      'startedAt': req.body.startedAt,
+      'endedAt': req.body.endedAt,
       'analysisInfo': normalise({
         'status': analysisStatus,
-        'version': req.query.analysisVersion,
-        'startedAt': req.query.analysisStartedAt,
-        'endedAt': req.query.analysisEndedAt
+        'version': req.body.analysisVersion,
+        'startedAt': req.body.analysisStartedAt,
+        'endedAt': req.body.analysisEndedAt
       })
     }, function (err, rideInfo) {
       if (err) {
