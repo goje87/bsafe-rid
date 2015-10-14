@@ -1,0 +1,1 @@
+ { "success": true, "data": [{"_id":"5614ce60071cf3a01c1a3f09","timestamp":1,"rideId":8888,"__v":0,"comp":{"magneticHeading":null,"trueHeading":null,"headingAccuracy":null},"geo":{"latitude":null,"longitude":null,"accuracy":null,"altitude":null,"altitudeAccuracy":null,"heading":null,"speed":null},"acc":{"x":null,"y":null,"z":null}}]}

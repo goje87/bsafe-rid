@@ -10,7 +10,7 @@ var fs = require('fs');
 // var schemas = {
 //   analysisData: require('./model/analysisData').schema,
 // };
-var analysisInprogress = true;
+var analysisInprogress = false;
 
 function analyzeFrame(rideId, frame){
   console.log("IN ANALYSIS FUNCTION");
@@ -36,6 +36,7 @@ function analyzeRide(){
   if(analysisInprogress){
     return;
   }
+  analysisInprogress = true;
   var rideId;
   var getQuery = {
     'analyzed': 'false',
