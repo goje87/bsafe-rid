@@ -5,6 +5,20 @@ var app = express();
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var methodOverride = require('method-override');
+var bunyan = require('bunyan');
+var log = bunyan.createLogger({
+                name: 'bsafe',
+                streams: [
+                    {
+                        level: 'info',
+                        path: __dirname + '/logs/info.log'
+                    },
+                    {
+                        level: 'error',
+                        path: __dirname + '/logs/error.log'
+                    }
+                ]
+            });
 var schemas = {
   rideInfo: require('./model/rideInfo').schema,
   sensorData: require('./model/sensorData').schema
@@ -101,12 +115,12 @@ app.get('/rideInfo/:rideId', function(req, res){
   mongoose.model('rideInfo').find({ 'rideId': req.params.rideId }, function (err, result) {
     if (err) {
       res.send(404, { 'success': false, error: { 'message': err } });
-      console.log('ERRORED at GET /   , ');
-      return console.error(err);
+      log.error('ERRORED at GET /   , ' + err);
+      return ;
     }
     else {
-      console.log('SUCCESS at GET /   , for collection: rideInfo');
-      console.log('Get results for RIDE ID =  ' + req.params.rideId );
+      log.info('SUCCESS at GET /   , for collection: rideInfo');
+      log.info('Get results for RIDE ID =  ' + req.params.rideId );
       res.send(200, { 'success': true, 'data': result });
       result = null;
     }
@@ -137,7 +151,6 @@ app.get('/rideInfo', function(req, res, next){
     var isFirstDoc = true;
     res.write(' { "success": true, "data": [');
     stream.on('data', function (doc) {
-      console.log(doc)
       res.write((isFirstDoc ? '' : ',')+JSON.stringify(doc));
       isFirstDoc = false;
     });
@@ -204,12 +217,12 @@ app.post('/sensorData', function(req, resp){
     'version': version
   }, function (err, sensorData) {
     if(err) {
-      console.log('ERRORED at POST /   , ' + err);
+      log.error('ERRORED at POST /   , ' + err);
       resp.send(422, { 'success': false, error: { 'message': err } });
     }
     else {
-      console.log('SUCCESS at POST /  for collection sensorData ############################# ');
-      console.log('POST creating new entry: ' + sensorData);
+      log.info('SUCCESS at POST /  for collection sensorData # ');
+      log.info('POST creating new entry: ' + sensorData._id);
       resp.send(201, { 'success': true, 'data': sensorData });
       sensorData = null;
     }
@@ -252,19 +265,20 @@ app.post('/rideInfo', function(req, resp){
       })
     }, function (err, rideInfo) {
       if (err) {
-        console.log('ERRORED at POST /   , ' + err);
+        log.error('ERRORED at POST /   , ' + err);
         resp.send(422, { 'success': false, error: { 'message': err }});
       }
       else {
-        console.log('SUCCESS at POST /  for collection rideInfo ############################# ');
-        console.log('POST creating new entry: ' + rideInfo);
+        log.info('SUCCESS at POST /  for collection rideInfo # ');
+        log.info('POST creating new entry: ' + rideInfo._id);
         resp.send(201, { 'success': true, 'data': rideInfo});
         rideInfo = null;
       }
     });
     return ;
   }
-  resp.send(422, { 'success': false, error: { 'message': 'Both rideId, userId and startedAt are REQUIRED' } });
+  log.error('ERROR: rideId, userId and startedAt are REQUIRED');
+  resp.send(422, { 'success': false, error: { 'message': 'rideId, userId and startedAt are REQUIRED' } });
 });
 
 app.put('/rideInfo/:rideId', function(req, resp){
@@ -280,11 +294,11 @@ app.put('/rideInfo/:rideId', function(req, resp){
 
     mongoose.model('rideInfo').findOneAndUpdate({ rideId: req.params.rideId}, updateFields, { new: true}, function (err, rideInfo) {
       if (err) {
-        console.log('ERRORED at PUT /   , ' + err);
+        log.error('ERRORED at PUT /   , ' + err);
         resp.send(422, { 'success': false, error: { 'message': err }});
       } else {
-        console.log('SUCCESS at PUT /  for collection rideInfo ############################# ');
-        console.log('PUT updating entry: ' + rideInfo);
+        log.info('SUCCESS at PUT /  for collection rideInfo # ');
+        log.info('PUT updating entry: ' + rideInfo._id);
         resp.send(201, { 'success': true, 'data': rideInfo});
         rideInfo = null;
       }
@@ -296,7 +310,7 @@ app.put('/rideInfo/:rideId', function(req, resp){
 
 
 app.listen(3000, function(){
-  console.log('Running on port 3000');
+  log.info('Running on port 3000');
 });
 
 var analysis = require('./analysis/analysis');
