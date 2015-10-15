@@ -302,4 +302,4 @@ app.listen(3000, function(){
 var analysis = require('./analysis/analysis');
 setInterval(function() {
   analysis.analyzeRide();
-}, 10000);
+}, 5000);

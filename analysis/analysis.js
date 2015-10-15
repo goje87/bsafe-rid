@@ -42,41 +42,48 @@ function analyzeRide(){
     'analyzed': 'false',
   };
     request.get({
-      url:'http://localhost:3000/rideInfo',
+      url:'http://bsafe.goje87.com:3000/rideInfo',
       body: {'analyzed': 'false'},
       json: true
     },
     function(err,httpResponse,body){
+      console.log(httpResponse.body.data);
     if(err){
       console.log(err);
     } else if(httpResponse.body.success == true && httpResponse.body.data.length > 0){
+      console.log(httpResponse.body.data.length);
       rideId = httpResponse.body.data[0].rideId;
       var violations =[];
       //Check if ride JSON file exists in ./analysis/rideFiles
       fs.access('./analysis/rideFiles/' + rideId + '.json', fs.R_OK | fs.W_OK, function (err) {
         if(err){
           //If file does not exist. GET it from server and continue analysis.
-          var requestURL = "http://localhost:3000/sensorData/" + rideId;
+          var requestURL = "http://bsafe.goje87.com:3000/sensorData/" + rideId;
           var writeFile = request(requestURL).pipe(fs.createWriteStream("./analysis/rideFiles/" + rideId + ".json"));
           writeFile.on('finish', function(){
             continueAnalysis();
           });
         } else {
           //If file exists. Delete it and GET it again from server and continue analysis.
-          fs.unlink('./analysis/rideFiles/' + rideId + '.json', function (err) {
+          fs.unlinkSync('./analysis/rideFiles/' + rideId + '.json', function (err) {
             if (err) throw err;
-            console.log('Deleted previously existing Ride file for this ride, and continuing analysis.');
+            console.log('Deleted previously existing Ride file for rideId ' + rideId + ', and continuing analysis.');
           });
-          var requestURL = "http://localhost:3000/sensorData/" + rideId;
+          var requestURL = "http://bsafe.goje87.com:3000/sensorData/" + rideId;
           var writeFile = request(requestURL).pipe(fs.createWriteStream("./analysis/rideFiles/" + rideId + ".json"));
           writeFile.on('finish', function(){
             continueAnalysis();
+            fs.unlinkSync('./analysis/rideFiles/' + rideId + '.json', function (err) {
+              if (err) throw err;
+              console.log('Deleting ride file after analysis for rideId ' + rideId );
+            });
           });
         }
       });
 
       function continueAnalysis(){
         var rideFile = require("./rideFiles/" + rideId + ".json");
+        console.log('######  Analyzing rideId : ' + rideId);
         var analysisStartTime = Date.now();
         if(rideFile.data.length > 100){
           var count = 0;
@@ -124,6 +131,38 @@ function analyzeRide(){
             i++;
           }
         }else {
+          var analysisEndTime = Date.now();
+          var analysisInfo = JSON.stringify({
+            'status': 'rejected',
+            'version': 1,
+            'startedAt': analysisStartTime,
+            'endedAt': analysisEndTime,
+            'violations': violations
+          });
+          var putQuery = {
+            'rideId': rideId,
+            'analysisInfo': analysisInfo
+          };
+            request.put({
+              url:'http://bsafe.goje87.com:3000/rideInfo/' + rideId,
+              body: putQuery,
+              json: true
+            },
+            function(err,httpResponse,body){
+              if(httpResponse.body.success == true){
+                console.log(httpResponse.body);
+                console.log("Succesfully updated for rideId " + httpResponse.body.data.rideId );
+              } else {
+                console.log("Failed to update ");
+              }
+            if(err){
+              console.log(err);
+            }
+          });
+          fs.unlinkSync('./analysis/rideFiles/' + rideId + '.json', function (err) {
+            if (err) throw err;
+            console.log('Deleting ride file after analysis for rideId ' + rideId );
+          });
           console.log("Ride is too short!");
           return;
         }
@@ -140,13 +179,13 @@ function analyzeRide(){
           'analysisInfo': analysisInfo
         };
           request.put({
-            url:'http://localhost:3000/rideInfo/' + rideId,
+            url:'http://bsafe.goje87.com:3000/rideInfo/' + rideId,
             body: putQuery,
             json: true
           },
           function(err,httpResponse,body){
             if(httpResponse.body.success == true){
-              console.log("Succesfully updated for rideId" + httpResponse.body.rideId);
+              console.log("Succesfully updated for rideId " + httpResponse.body.rideId);
             } else {
               console.log("Failed to update ");
             }

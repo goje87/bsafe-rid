@@ -7,7 +7,7 @@ module.exports.schema = {
   'startedAt': Number,
   'endedAt': Number,
   'analysisInfo': {
-    'status': { type: String, enum: ['inprogress', 'completed', 'pending'] },
+    'status': { type: String, enum: ['inprogress', 'completed', 'pending', 'rejected'] },
     'version': Number,
     'startedAt': Number,
     'endedAt': Number,
