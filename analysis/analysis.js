@@ -46,7 +46,6 @@ function analyzeRide(){
       json: true
     },
     function(err,httpResponse,body){
-      console.log(httpResponse.body.data);
     if(err){
       console.log(err);
     } else if(httpResponse.body.success == true && httpResponse.body.data.length > 0){
