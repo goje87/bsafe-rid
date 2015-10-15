@@ -13,7 +13,6 @@ var fs = require('fs');
 var analysisInprogress = false;
 
 function analyzeFrame(rideId, frame){
-  console.log("IN ANALYSIS FUNCTION");
   var timeAtEvent = frame[50].timestamp;
   var requestData = {
     'violationType': 'Speedbreaker',
@@ -51,7 +50,6 @@ function analyzeRide(){
     if(err){
       console.log(err);
     } else if(httpResponse.body.success == true && httpResponse.body.data.length > 0){
-      console.log(httpResponse.body.data.length);
       rideId = httpResponse.body.data[0].rideId;
       var violations =[];
       //Check if ride JSON file exists in ./analysis/rideFiles
