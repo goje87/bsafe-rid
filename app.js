@@ -11,11 +11,15 @@ var log = bunyan.createLogger({
                 streams: [
                     {
                         level: 'info',
-                        path: __dirname + '/logs/info.log'
+                        path: '/var/tmp/bsafe/logs/info.log'
                     },
                     {
                         level: 'error',
-                        path: __dirname + '/logs/error.log'
+                        path: '/var/tmp/bsafe/logs/error.log'
+                    },
+                    {
+                        level: 'warn',
+                        path: '/var/tmp/bsafe/logs/error.log'
                     }
                 ]
             });
@@ -115,12 +119,11 @@ app.get('/rideInfo/:rideId', function(req, res){
   mongoose.model('rideInfo').find({ 'rideId': req.params.rideId }, function (err, result) {
     if (err) {
       res.send(404, { 'success': false, error: { 'message': err } });
-      log.error('ERRORED at GET /   , ' + err);
+      log.error(err);
       return ;
     }
     else {
-      log.info('SUCCESS at GET /   , for collection: rideInfo');
-      log.info('Get results for RIDE ID =  ' + req.params.rideId );
+      log.info('Succesfully got results for rideId =  ' + req.params.rideId );
       res.send(200, { 'success': true, 'data': result });
       result = null;
     }
@@ -217,12 +220,11 @@ app.post('/sensorData', function(req, resp){
     'version': version
   }, function (err, sensorData) {
     if(err) {
-      log.error('ERRORED at POST /   , ' + err);
+      log.error(err);
       resp.send(422, { 'success': false, error: { 'message': err } });
     }
     else {
-      log.info('SUCCESS at POST /  for collection sensorData # ');
-      log.info('POST creating new entry: ' + sensorData._id);
+      log.info('Succesfully created new entry for sensorData with _id: ' + sensorData._id);
       resp.send(201, { 'success': true, 'data': sensorData });
       sensorData = null;
     }
@@ -265,19 +267,18 @@ app.post('/rideInfo', function(req, resp){
       })
     }, function (err, rideInfo) {
       if (err) {
-        log.error('ERRORED at POST /   , ' + err);
+        log.error(err);
         resp.send(422, { 'success': false, error: { 'message': err }});
       }
       else {
-        log.info('SUCCESS at POST /  for collection rideInfo # ');
-        log.info('POST creating new entry: ' + rideInfo._id);
+        log.info('Succesfully created new entry for rideInfo with _id : ' + rideInfo._id);
         resp.send(201, { 'success': true, 'data': rideInfo});
         rideInfo = null;
       }
     });
     return ;
   }
-  log.error('ERROR: rideId, userId and startedAt are REQUIRED');
+  log.warn('ERROR: rideId, userId and startedAt are REQUIRED');
   resp.send(422, { 'success': false, error: { 'message': 'rideId, userId and startedAt are REQUIRED' } });
 });
 
@@ -294,11 +295,10 @@ app.put('/rideInfo/:rideId', function(req, resp){
 
     mongoose.model('rideInfo').findOneAndUpdate({ rideId: req.params.rideId}, updateFields, { new: true}, function (err, rideInfo) {
       if (err) {
-        log.error('ERRORED at PUT /   , ' + err);
+        log.error(err);
         resp.send(422, { 'success': false, error: { 'message': err }});
       } else {
-        log.info('SUCCESS at PUT /  for collection rideInfo # ');
-        log.info('PUT updating entry: ' + rideInfo._id);
+        log.info('Successfully updated entry for rideInfo with _Id: ' + rideInfo._id);
         resp.send(201, { 'success': true, 'data': rideInfo});
         rideInfo = null;
       }
